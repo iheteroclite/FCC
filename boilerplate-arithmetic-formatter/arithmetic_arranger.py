@@ -2,6 +2,9 @@ import sys
 import re
 
 def arithmetic_arranger(problems, calculate=False):
+    """ Returns up to 5 long addition and subtraction formatted sums,
+    with the answers when calculate is True. """
+
     # Error checking
     if len(problems) > 5:  # More than 5 problems error
         return 'Error: Too many problems.'
@@ -23,6 +26,10 @@ def arithmetic_arranger(problems, calculate=False):
         if (length[x] > 4):
             return 'Error: Numbers cannot be more than four digits.'
 
+        if not (problems_parts[x][0].isdigit() and problems_parts[x][2].isdigit()):
+            return 'Error: Numbers must only contain digits.'
+
+    # Calculation and formatting
     i = 0
     lines = ['']*4
     answer = 0
@@ -42,7 +49,7 @@ def arithmetic_arranger(problems, calculate=False):
 
         i += 1
 
-    # Concatenate lines into output
+    # Concatenate lines into str output
     if calculate is True:
         arranged_problems = '\n'.join(line[:-4] for line in lines)
     else:
