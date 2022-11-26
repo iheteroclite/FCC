@@ -27,25 +27,20 @@ def add_time(start, duration, day = None):
     else:
         new_time += ampm_in
 
-    # days_add accounts for adding half a day when its the evening
+    # Calculate (optional) day name
     days_add = int(half_days // 2 + 1) if (half_days and ampm_in == "PM") else int(half_days // 2)
-    print('days add ' + str(days_add))
 
-    day_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     if day:
+        day_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         day_index_in = day_list.index(day[0].upper() + day[1:].lower())
-
-    day_index = None
-    if day:
         # There's 7 days... We go up to sunday then start again
         day_index = (days_add - 6 + day_index_in) % 7 - 1
         new_time += (', ' + day_list[day_index])
-    if days_add >= 1:
 
-        if days_add == 1:
-            new_time += ' (next day)'
-
-        if days_add > 1:
-            new_time += (' (' + str(days_add) + ' days later)')
+    # Calculate number of days passed
+    if days_add == 1:
+        new_time += ' (next day)'
+    elif days_add > 1:
+        new_time += (' (' + str(days_add) + ' days later)')
 
     return new_time
