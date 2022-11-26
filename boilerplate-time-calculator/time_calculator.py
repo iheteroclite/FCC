@@ -5,6 +5,7 @@ def add_time(start, duration, day = None):
     (optional) starting day of the week, case insensitive
     Returns the end time, (optional) day, and number of days later
     '''
+    print('\n')
     print (start, duration, day)
     time_in, ampm_in = start.split()
     hr_in, min_in = time_in.split(':')
@@ -17,7 +18,7 @@ def add_time(start, duration, day = None):
     mins =  str(mins_add % 60).zfill(2)
 
     hrs_add = int(hr_in) + int(dur_hr) + (mins_add // 60)
-    hrs = hrs_add % 12  #TODO: should this say 00 or 12 at 12?
+    hrs = hrs_add % 12 if (hrs_add % 12) > 0 else 12
     new_time = str(hrs) + ':' + mins + ' '
     print('time added line 22: ', new_time)
 
