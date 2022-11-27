@@ -7,8 +7,9 @@ class Category:
 
 	def __str__(self):
 		print_str = self.name.center(30, '*')
-		# for amnt, des in self.ledger:
-		# 	print_str += '\n' + des[:23].ljust(23) + '{:.2f}'.format(float(amnt).rjust(7)
+		for item in self.ledger:
+			print_str += '\n' + item.get('description')[:23].ljust(23) + '{:.2f}'.format(item.get('amount')).rjust(7)
+		print_str += '\n' + 'Total: ' + '{:.2f}'.format(self.balance)
 		return print_str
 
 
@@ -35,7 +36,21 @@ class Category:
 		return False if abs(amount) > self.balance else True
 
 
-
-
 def create_spend_chart(categories):
-	print('hi')
+	''' Takes a list of categories and outputs a
+	bar chart showing the percentage spend in each
+	category, by withdrawl not deposits '''
+	chart_string = "Percentage spent by category\n"
+	num_categories = len(categories)
+	width = num_categories * 3 + 1
+	num_circles = []
+	for category in categories:
+		diff = ledger[0].get('amount') - category.balance
+		percent_spend = diff / category.balance
+		num_circles.append(round(percent_spend_raw/10))
+
+	for x in range(100, 0, -10)
+		perc_label = (str(x) + '|').rjust(4)
+	 	chart_string += perc_label.rjust(4).ljust(width)
+
+	return chart_string
