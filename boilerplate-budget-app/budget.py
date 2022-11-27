@@ -40,17 +40,38 @@ def create_spend_chart(categories):
 	''' Takes a list of categories and outputs a
 	bar chart showing the percentage spend in each
 	category, by withdrawl not deposits '''
-	chart_string = "Percentage spent by category\n"
+	chart_str = "Percentage spent by category\n"
 	num_categories = len(categories)
-	width = num_categories * 3 + 1
-	num_circles = []
+	print('num_categories ', num_categories)
+	width = num_categories * 3 + 5
+	circle_percents = []
+	name_lengths = []
 	for category in categories:
-		diff = ledger[0].get('amount') - category.balance
+		# TODO: Balance includes money going in!
+		diff = category.ledger[0].get('amount') - category.balance
 		percent_spend = diff / category.balance
-		num_circles.append(round(percent_spend_raw/10))
+		print('spend ', percent_spend)
+		circle_percents.append(int(round(percent_spend*10)*10))
+		print(circle_percents)
+		name_lengths.append(len(category.name))
 
-	for x in range(100, 0, -10)
-		perc_label = (str(x) + '|').rjust(4)
-	 	chart_string += perc_label.rjust(4).ljust(width)
 
-	return chart_string
+	for x in range(100, 0, -10):
+		chart_str += (str(x) + '|').rjust(4)
+		for i in range (num_categories):
+			chart_str += ' o ' if (circle_percents[i] >= x) else '   '
+		chart_str += ' \n'
+
+	chart_str += '-'*width + '\n'
+
+	#TODO - add the names, by getting max of name_lengths, iterating over that range
+	# add ' '*4 to beginning of line, then for each category either print the letter, or spaces
+	for x in range(max(name_lengths)):
+		chart_str += ' '*4
+		for j in range (num_categories):
+			letter = categories[j].name[x] if name_lengths[j] > x else ' '
+			chart_str += letter.center(3)
+		chart_str += ' \n'
+
+
+	return chart_str
