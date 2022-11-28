@@ -12,7 +12,6 @@ class Category:
 		print_str += '\n' + 'Total: ' + '{:.2f}'.format(self.balance)
 		return print_str
 
-
 	def deposit(self, amount, description=''):
 		self.balance += float(amount)
 		self.ledger.append({"amount": amount, "description": description})
@@ -26,10 +25,10 @@ class Category:
 	def get_balance(self):
 		return self.balance
 
-	def transfer(self, amount, donor_catergory):
+	def transfer(self, amount, reciever):
 		if self.check_funds(amount):
-			self.withdraw(amount, 'Transfer to ' + str(self.name))
-			donor_catergory.deposit(amount, 'Transfer from '  + str(self.name)) #need to add category name here
+			self.withdraw(amount, 'Transfer to ' + str(reciever.name))
+			reciever.deposit(amount, 'Transfer from '  + str(self.name)) #need to add category name here
 		return self.check_funds(amount)
 
 	def check_funds(self, amount):
@@ -38,40 +37,40 @@ class Category:
 
 def create_spend_chart(categories):
 	''' Takes a list of categories and outputs a
-	bar chart showing the percentage spend in each
-	category, by withdrawl not deposits '''
+	bar chart showing what percentage of your total expenditure
+	was spent on each category, by withdrawl '''
 	chart_str = "Percentage spent by category\n"
 	num_categories = len(categories)
-	print('num_categories ', num_categories)
 	width = num_categories * 3 + 5
 	circle_percents = []
 	name_lengths = []
 	for category in categories:
 		# TODO: Balance includes money going in!
-		diff = category.ledger[0].get('amount') - category.balance
-		percent_spend = diff / category.balance
+		money_out = 0
+		#print('category.ledger: ', category.ledger)
+		for transaction in category.ledger:
+			if transaction.get('amount') < 0:
+				money_out += transaction.get('amount')
+		percent_spend = money_out / category.ledger[0].get('amount')
 		print('spend ', percent_spend)
-		circle_percents.append(int(round(percent_spend*10)*10))
-		print(circle_percents)
+		circle_percents.append(abs(int(round(percent_spend*10)*10)))
 		name_lengths.append(len(category.name))
 
-
-	for x in range(100, 0, -10):
+	for x in range(100, -10, -10):
 		chart_str += (str(x) + '|').rjust(4)
 		for i in range (num_categories):
 			chart_str += ' o ' if (circle_percents[i] >= x) else '   '
 		chart_str += ' \n'
 
-	chart_str += '-'*width + '\n'
+	chart_str += ' '*4 + '-'*(width - 4) + '\n'
 
-	#TODO - add the names, by getting max of name_lengths, iterating over that range
-	# add ' '*4 to beginning of line, then for each category either print the letter, or spaces
 	for x in range(max(name_lengths)):
 		chart_str += ' '*4
 		for j in range (num_categories):
 			letter = categories[j].name[x] if name_lengths[j] > x else ' '
 			chart_str += letter.center(3)
 		chart_str += ' \n'
-
-
-	return chart_str
+	out = []
+	out.append(chart_str[:-1])
+	print(out)
+	return chart_str[:-1]
